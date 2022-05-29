@@ -1,0 +1,48 @@
+﻿
+
+
+@model PaylasimEkleViewModel
+
+@{ 
+    ViewData["Title"] = "Yeni Paylaşım";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!--Metod post olacak ama enctype girmek zorundayız yoksa dosya yollayamazsın o formda-->
+<!--multipart/form-data==> verileri sıkıştırırken gönderirken , string olarak değil dosya yollama formatına uygun olarak verileri kodlar  -->
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="Aciklama">Açıklama</label>
+        <input asp-for="Aciklama" class="form-control"/>
+        <span asp-validation-for="Aciklama"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Resim">Resim</label>
+        <div class="onizleme mb-2 d-none" id="onizleme">
+            <img src="#" alt="Ön İzleme" height="200" />
+        </div>
+        <!--Herhangi bir geçerli dosya seçildiğinde ön izleme içerisinde göster diyeceğiz-->
+        <input asp-for="Resim" type="file" class="form-control-file"/>
+        <span asp-validation-for="Resim"></span>
+    </div>
+    <button class="btn btn-primary">Kaydet</button>
+
+</form>
+<!-----*********---------->
+@section Scripts{ 
+    <script>
+        var img = $("#onizleme>img")[0];
+        $("#Resim").change(function (event) {
+            var dosya = this.files[0];
+            if (dosya && dosya.type.startsWith("image/")) {
+                img.src = URL.createObjectURL(dosya);
+                $("#onizleme").removeClass("d-none");
+            }
+            else {
+                img.src = "#";
+                $("#onizleme").addClass("d-none")
+            }
+        })
+    </script>
+}

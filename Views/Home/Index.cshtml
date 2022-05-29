@@ -1,0 +1,51 @@
+﻿@model List<Paylasim>
+@{
+    ViewData["Title"] = "Home Page";
+}
+<div classs="mx-auto" style="max-width:600px">
+    <a asp-controller="Paylasimlar" asp-action="Yeni" class="btn btn-primary mb-2">Yeni paylaşım</a>
+
+    @if (Model.Count == 0)
+    {
+        <div class="text-center">
+            Henüz bir paylaşım yapılmamış...
+        </div>
+    }
+    else
+    {
+        @foreach (Paylasim paylasim in Model)
+        {
+            <div class="paylasim mb-3 border rounded p-3">
+                <div class="paylasim-resim" style="position:relative">
+                    <div class="paylasim-resim-eylemler">
+                        <a href="#" class="btn btn-sm btn-info "><i class="fa-solid fa-edit"></i></a>
+                        <a data-sil="@paylasim.Id" href="#" class="btn btn-sm btn-danger ml-1"><i class="fa-solid fa-trash"></i></a>
+                    </div>
+                    <img src="~/img/@paylasim.ResimYolu" alt="Paylaşım" class="w-100" />
+                </div>
+                <div class="mt-2">
+                    @paylasim.Aciklama
+
+
+                </div>
+            </div>
+        }
+    }
+</div>
+@section Scripts {
+    <script>
+        $("[data-sil]").click(function (event) {
+            var btn = this;
+            event.preventDefault();//hrefe gitme dedik bu form olsaydı formun submit olmasını iptal etmiş oalcaktık.            
+            var id = $(this).data("sil");
+            $.ajax({
+                type: "post",
+                url: "@Url.Action("Sil", "Paylasimlar")",
+                data: { id: id },
+                success: function (data) {
+                    $(btn).closest(".paylasim").fadeOut(1000, function () { $(this).remove(); });
+                }
+            });
+        })
+    </script>
+}
